@@ -1,31 +1,92 @@
 import tkinter
 
-#Creer la fenetre du jeu
+# Creer la fenetre du jeu
 root = tkinter.Tk()
-def place_symbol(row,column):
-    print("click",row,column)
+
+# Stockage global
+buttons = []
+
+def check_win(clicked_row, clicked_column):
+    count=0
+    #victoire horizontale
+    for col in range(3):
+        current_button = buttons[col][clicked_row]
+        if current_button['text'] == "X":
+            count+=1
+    if count == 3:
+        print("Joueur 1 a gagné horizontallement")
+
+    count= 0
+    for i in range(3):
+        current_button = buttons[clicked_column][i]
+        if current_button['text'] == "X":
+            count+=1
+    if count == 3:
+        print("Joueur 1 a gagné verticalemment")
+    #diagonalement
+    count = 0
+    for i in range(3):
+        current_button = buttons[i][i]
+        if current_button['text'] == "X":
+            count += 1
+    if count == 3:
+        print("Joueur 1 a gagné diagonalement")
+
+    #inverse diagonal
+    count = 0
+    for i in range(3):
+        current_button = buttons[2-i][i]
+        if current_button['text'] == "X":
+            count += 1
+    if count == 3:
+        print("Joueur 1 a gagné diagonalement inversé")
+
+def place_symbol(row, column):
+    print("click", row, column)
+
+    # On utilise bien [column][row] comme tu le souhaitais !
+    clicked_buttons = buttons[column][row]
+    clicked_buttons.config(text="X")
+    check_win(row, column)
+
 def draw_grid():
-   for row in range(3):
-       for column in range(3):
-           button = tkinter.Button(root
-                ,font=("Arial",50),
-                width=2,height=1,
-                command=lambda r=row,c=column:place_symbol(r,c))
+    # INVERSION ICI : On boucle d'abord sur les colonnes
+    for column in range(3):
+        button_in_col = []  # Ce sont les boutons de la colonne actuelle
 
-           button.grid(row=row, column=column)
-           # Ajout des marges (padx, pady) et de l'étirement (sticky)
-           button.grid(row=row, column=column, padx=5, pady=5, sticky="nsew")
+        # Puis on boucle sur les lignes
+        for row in range(3):
+            button = tkinter.Button(
+                root,
+                font=("Arial", 40),
+                width=2,
+                height=1,
+                command=lambda r=row, c=column: place_symbol(r, c)
+            )
 
-#personnalisation de la fenetre
+            # L'affichage à l'écran reste inchangé (row=row, column=column)
+            button.grid(row=row, column=column, padx=5, pady=5, sticky="nsew")
+
+            # On ajoute le bouton à notre liste de colonne
+            button_in_col.append(button)
+
+        # On ajoute la colonne complète à notre stockage global
+        buttons.append(button_in_col)
+
+
+# personnalisation de la fenetre
 root.title("Tic Tac Toe")
-root.minsize(500,500)
-#  donner une couleur de fond à la fenêtre pour faire ressortir l'espacement
+root.minsize(500, 500)
+
+# donner une couleur de fond à la fenêtre pour faire ressortir l'espacement
 root.configure(bg="#333333")
+
 # Configurer la fenêtre pour que la grille s'étende et se centre
 for i in range(3):
     root.grid_rowconfigure(i, weight=1)
     root.grid_columnconfigure(i, weight=1)
+
 draw_grid()
 
-#boucle principal
+# boucle principal
 root.mainloop()
