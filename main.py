@@ -1,11 +1,24 @@
 import tkinter
 
-# Creer la fenetre du jeu
-root = tkinter.Tk()
-
 # Stockage global
 buttons = []
 current_player ="X"
+win =False
+# Creer la fenetre du jeu
+root = tkinter.Tk()
+
+def check_null():
+    print("match null")
+
+def print_winner():
+    global win
+    if not win:
+        win = True
+        if current_player == "O":
+            print("player 2  has won")
+        else:
+            print("player 1 has won")
+
 def switch_player():
     global current_player
 
@@ -21,10 +34,7 @@ def check_win(clicked_row, clicked_column):
         if current_button['text'] == current_player:
             count+=1
     if count == 3:
-        if current_player == "O":
-            print("player 2  has won")
-        else:
-            print("player 1 has won")
+        print_winner()
 
     count= 0
     for i in range(3):
@@ -32,7 +42,7 @@ def check_win(clicked_row, clicked_column):
         if current_button['text'] == current_player:
             count+=1
     if count == 3:
-        print("Joueur 1 a gagné verticalemment")
+        print_winner()
     #diagonalement
     count = 0
     for i in range(3):
@@ -40,7 +50,7 @@ def check_win(clicked_row, clicked_column):
         if current_button['text'] == current_player:
             count += 1
     if count == 3:
-        print("Joueur 1 a gagné diagonalement")
+        print_winner()
 
     #inverse diagonal
     count = 0
@@ -49,16 +59,29 @@ def check_win(clicked_row, clicked_column):
         if current_button['text'] == current_player:
             count += 1
     if count == 3:
-        print("Joueur 1 a gagné diagonalement inversé")
+        print_winner()
+    #detecter match nulle
+    if not win:
+        count = 0
+        for i in range(3):
+            for j in range(3):
+                current_button = buttons[i][j]
+                if current_button['text'] == "X" or current_button['text'] == "O":
+                    count += 1
+        print(count)
+        if count == 9:
+            check_null()
 
 def place_symbol(row, column):
     print("click", row, column)
 
     # On utilise bien [column][row] comme tu le souhaitais !
     clicked_buttons = buttons[column][row]
-    clicked_buttons.config(text=current_player)
-    check_win(row, column)
-    switch_player()
+    print(clicked_buttons['text'])
+    if clicked_buttons['text'] == '':
+        clicked_buttons.config(text=current_player)
+        check_win(row, column)
+        switch_player()
 
 def draw_grid():
     # INVERSION ICI : On boucle d'abord sur les colonnes
