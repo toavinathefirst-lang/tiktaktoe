@@ -5,21 +5,31 @@ root = tkinter.Tk()
 
 # Stockage global
 buttons = []
+current_player ="X"
+def switch_player():
+    global current_player
 
+    if current_player == "X":
+        current_player = "O"
+    else:
+        current_player = "X"
 def check_win(clicked_row, clicked_column):
     count=0
     #victoire horizontale
     for col in range(3):
         current_button = buttons[col][clicked_row]
-        if current_button['text'] == "X":
+        if current_button['text'] == current_player:
             count+=1
     if count == 3:
-        print("Joueur 1 a gagné horizontallement")
+        if current_player == "O":
+            print("player 2  has won")
+        else:
+            print("player 1 has won")
 
     count= 0
     for i in range(3):
         current_button = buttons[clicked_column][i]
-        if current_button['text'] == "X":
+        if current_button['text'] == current_player:
             count+=1
     if count == 3:
         print("Joueur 1 a gagné verticalemment")
@@ -27,7 +37,7 @@ def check_win(clicked_row, clicked_column):
     count = 0
     for i in range(3):
         current_button = buttons[i][i]
-        if current_button['text'] == "X":
+        if current_button['text'] == current_player:
             count += 1
     if count == 3:
         print("Joueur 1 a gagné diagonalement")
@@ -36,7 +46,7 @@ def check_win(clicked_row, clicked_column):
     count = 0
     for i in range(3):
         current_button = buttons[2-i][i]
-        if current_button['text'] == "X":
+        if current_button['text'] == current_player:
             count += 1
     if count == 3:
         print("Joueur 1 a gagné diagonalement inversé")
@@ -46,8 +56,9 @@ def place_symbol(row, column):
 
     # On utilise bien [column][row] comme tu le souhaitais !
     clicked_buttons = buttons[column][row]
-    clicked_buttons.config(text="X")
+    clicked_buttons.config(text=current_player)
     check_win(row, column)
+    switch_player()
 
 def draw_grid():
     # INVERSION ICI : On boucle d'abord sur les colonnes
